@@ -39,7 +39,7 @@ import url.Url;
 
 public class MainActivity extends AppCompatActivity {
     private EditText etname, etdesc;
-    private Button btnsave;
+    private Button btnsave,btnViewHero;
     private ImageView imgProfile;
     String imagePath;
     String imageName;
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         etdesc = findViewById(R.id.etdesc);
         btnsave = findViewById(R.id.btnsave);
         imgProfile = findViewById(R.id.imgPhoto);
+        btnViewHero=findViewById(R.id.btnViewHero);
 
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 BrowseImage();
+            }
+        });
+        btnViewHero.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(MainActivity.this,ViewHeroes.class);
+                startActivity(intent);
             }
         });
     }
@@ -119,13 +127,12 @@ public class MainActivity extends AppCompatActivity {
         map.put("desc", desc);
         map.put("image", imageName);
 
-        Heroes heroes = new Heroes(name, desc);
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Url.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
 
         HeroesAPI heroesAPI = retrofit.create(HeroesAPI.class);
-        Call<Void> heroesCall = heroesAPI.addHero(heroes);
+        Call<Void> heroesCall = heroesAPI.addHero(map);
 
         heroesCall.enqueue(new Callback<Void>() {
             @Override
